@@ -94,7 +94,7 @@ Tag | Field | Req'd | Data Type | Notes
 --- | ---- | --- | --------- | -----------
 **35** | **MsgType** ||| **AL**
  710 | PosReqID | Y | String | Request ID
- 2618 | PositionID | Y | UInt64 | Position ID as defined in MT5
+ 2618 | PositionID | Y | UInt64 | Position ID 
  1 | Account | Y | UInt64 | Account holding the position
  55 | Symbol | Y | String | Position symbol
  20101 | StopLossPx | C | Decimal | Either TP or SL value is required
@@ -146,10 +146,12 @@ Tag | Field | Req'd | Data Type | Notes
 **35** | **MsgType** ||| **AN**
  1 | Account | Y | UInt64 | 
  710 | PosReqID | Y | String | 
- 724 | PosReqType | Y |  | Ignored but required by FIX4.4
+ 724 | PosReqType | Y | UInt64 | 0 - Open Position 1- Close Position
  581 | AccountType | Y |  | Ignored but required by FIX4.4
  715 | ClearingBusinessDate | Y |  | Ignored but required by FIX4.4
  60 | TransactTime | Y |  | Ignored but required by FIX4.4
+ 23010 | StartTime | C | DateTime | start date for close position request
+ 23011 | EndTime | C | DateTime | End date for close position request
 
 
 
@@ -201,12 +203,15 @@ Tag | Field | Req'd | Data Type | Notes
  20101 | StopLossPx | N | Decimal | 
  20102 | TakeProfitPx | N | Decimal | 
  20207 | Profit | N | Decimal | Current position profit
- 20208 | Storage | N | Decimal | Swap value
  2618 | PositionID | Y | UInt64 | 
  728 | PosReqResult | Y |  | Ignored but required by FIX4.4
  581 | AccountType | Y |  | Ignored but required by FIX4.4
  731 | SettlPriceType | Y |  | Ignored but required by FIX4.4
  734 | PriorSettlPrice | Y |  | Ignored but required by FIX4.4
+ 724 |PosReqType| Y | UInt64 |0 - Open position , 1 - Close position
+ 20300| CloseTime | C | DateTime |
+ 20301| ClosePrice | C | Decimal |
+
 
 
 
@@ -217,7 +222,7 @@ Server → Client
 
 Will be sent in response to CollateralInquiry and after any events that modify the accounts balance, margin, etc
 
-Please refer to [MetaQuotes documentation](https://support.metaquotes.net/en/docs/mt5/api/reference_trading/user_account/imtaccount)
+
 
 Tag | Field | Req'd | Data Type | Notes
 --- | ---- | --- | --------- | -----------
@@ -226,29 +231,14 @@ Tag | Field | Req'd | Data Type | Notes
  908 | CollRptID | N | String | 
  909 | CollInquiryID | N | String | Present if message is a response to CollateralInquiry
  1 | Account | Y | UInt64 | 
- 53 | Quantity | Y | Decimal | 
+ 53 | Quantity | Y | Decimal | Balance
  15 | Currency | Y | String | 
  20202 | Credit | N | Decimal | 
  20203 | Margin | N | Decimal | 
  20204 | MarginFree | N | Decimal | 
  20205 | MarginLevel | N | Decimal | 
  20206 | MarginLeverage | N | UInt32 | 
- 20207 | Profit | N | Decimal | 
- 20208 | Storage | N | Decimal | 
- 12 | Commission | N | Decimal | 
- 20210 | Floating | N | Decimal | 
  20211 | Equity | N | Decimal | 
- 20212 | SOActivation | N | EnSoActivation | 
- 20213 | SOTime | N | DateTime | 
- 20214 | SOLevel | N | Decimal | 
- 20215 | SOEquity | N | Decimal | 
- 20216 | SOMargin | N | Decimal | 
- 20217 | BlockedCommission | N | Decimal | 
- 20218 | BlockedProfit | N | Decimal | 
- 20219 | MarginInitial | N | Decimal | 
- 20220 | MarginMaintenance | N | Decimal | 
- 20221 | Assets | N | Decimal | 
- 20222 | Liabilities | N | Decimal | 
  58 | Text | N | String | 
 
 
@@ -302,7 +292,7 @@ Tag | Field | Req'd | Data Type | Notes
 --- | ---- | --- | --------- | -----------
 **35** | **MsgType** ||| **D**
  11 | ClOrdID | Y | String | Unique Client ID for the order
- 1 | Account | Y | UInt64 | MT5 account login
+ 1 | Account | Y | UInt64 |  account 
  54 | Side | Y | Side | Buy/Sell<br/>Valid values: <br/>1 = Buy<br/>2 = Sell<br/>7 = Unknown
  40 | OrdType | Y | OrderType | Required for open/place request.<br/>Ignored for close requests.<br/>Valid values: <br/>1 = Market<br/>2 = Limit<br/>3 = Stop<br/>4 = StopLimit<br/>Z = CloseBy
  38 | OrderQty | Y | Decimal | 
